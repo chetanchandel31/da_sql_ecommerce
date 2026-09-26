@@ -133,6 +133,29 @@ Full query: [queries/02_top_cities_by_customers.sql](queries/02_top_cities_by_cu
 
 Full query: [queries/03_customer_engagement_distribution.sql](queries/03_customer_engagement_distribution.sql)
 
+### 4. Premium product trends: average quantity per order vs. revenue
+
+**Problem:** Analyze the relationship between average purchase quantity per order and total revenue across all products, to identify which products show premium purchasing trends.
+
+**Approach:** Grouped `orderdetails` by `product_id`, computing average quantity per order (rounded to 2 decimal places) and total revenue (`price_per_unit * quantity`), sorted by average quantity descending, with total revenue as a tiebreaker.
+
+**Average quantity vs. revenue by product:**
+
+| product_id | AvgQuantity | TotalRevenue |
+|---|---|---|
+| 6 | 2.27 | 938000 |
+| 1 | 2.00 | 1620000 |
+| 8 | 2.00 | 390000 |
+| 3 | 1.99 | 1080000 |
+| 5 | 1.98 | 595000 |
+| 7 | 1.94 | 6040000 |
+| 4 | 1.91 | 1560000 |
+| 2 | 1.88 | 7560000 |
+
+**Result:** No clear correlation between average order quantity and revenue, product 2 has the lowest average quantity (1.88) but the highest total revenue by far (7,560,000), while product 6 has the highest average quantity (2.27) but only mid-range revenue. Products 1 and 8 both average exactly 2.00, and the revenue tiebreaker separates them (1,620,000 vs. 390,000). High-revenue products tend to sell in smaller quantities per order rather than bulk, suggesting price point drives revenue more than purchase volume.
+
+Full query: [queries/04_avg_quantity_per_order_vs_revenue.sql](queries/04_avg_quantity_per_order_vs_revenue.sql)
+
 ## How to run
 
 Requires MySQL 8+ and MySQL Workbench.
