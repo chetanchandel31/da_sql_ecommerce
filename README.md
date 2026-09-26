@@ -156,6 +156,51 @@ Full query: [queries/03_customer_engagement_distribution.sql](queries/03_custome
 
 Full query: [queries/04_avg_quantity_per_order_vs_revenue.sql](queries/04_avg_quantity_per_order_vs_revenue.sql)
 
+### 5. Category reach: unique customers per product category
+
+**Problem:** For each product category, calculate the unique number of customers purchasing from it, to understand which categories have the widest appeal across the customer base.
+
+**Approach:** Joined `orderdetails` to `products` (for category) and `orders` (for customer_id), then counted distinct customers per category, sorted descending.
+
+**Unique customers by category:**
+
+| category | unique_customers |
+|---|---|
+| Electronics | 79 |
+| Wearable Tech | 61 |
+| Photography | 45 |
+
+**Result:** Electronics reaches the widest customer base (79 unique customers), followed by Wearable Tech (61) and Photography (45), a fairly steep drop-off between the top and bottom categories, suggesting Electronics is the store's core traffic driver.
+
+Full query: [queries/05_unique_customers_by_category.sql](queries/05_unique_customers_by_category.sql)
+
+### 6. Month-over-month sales growth trend
+
+**Problem:** Analyze the month-on-month percentage change in total sales to identify growth trends, with percent change rounded to 2 decimal places.
+
+**Approach:** Used a subquery to get total sales per month (`date_format(order_date, "%Y-%m")`), with `lag()` fetching the previous month's total in the same pass. The outer query then computes percent change as `(current - previous) / previous * 100`.
+
+**Monthly sales and percent change:**
+
+| Month | TotalSales | PercentChange |
+|---|---|---|
+| 2023-03 | 789000 | NULL |
+| 2023-04 | 1704000 | 115.97 |
+| 2023-05 | 1582000 | -7.16 |
+| 2023-06 | 1040000 | -34.26 |
+| 2023-07 | 2568000 | 146.92 |
+| 2023-08 | 1800000 | -29.91 |
+| 2023-09 | 2927000 | 62.61 |
+| 2023-10 | 1497000 | -48.86 |
+| 2023-11 | 1151000 | -23.11 |
+| 2023-12 | 2774000 | 141.01 |
+| 2024-01 | 1555000 | -43.94 |
+| 2024-02 | 396000 | -74.53 |
+
+**Result:** Sales are highly volatile month-to-month, swinging between -74.53% and +146.92% with no sustained upward or downward trend. March 2023 shows NULL because it's the first month with no month before it to compare against.
+
+Full query: [queries/06_month_over_month_sales_growth.sql](queries/06_month_over_month_sales_growth.sql)
+
 ## How to run
 
 Requires MySQL 8+ and MySQL Workbench.
