@@ -5,8 +5,8 @@ TODO:
 ```mermaid
 erDiagram
     customers ||--o{ orders : customer_id
-    orders ||--o{ orderdetails : order_id
-    products ||--o{ orderdetails : "product_id"
+    orders ||--o{ OrderDetails : order_id
+    products ||--o{ OrderDetails : "product_id"
 
     customers {
         int customer_id PK
@@ -25,7 +25,7 @@ erDiagram
         int customer_id FK
         int total_amount
     }
-    orderdetails {
+    OrderDetails {
         int id PK
         int order_id FK
         int product_id FK
@@ -81,7 +81,7 @@ Tool: MySQL 8 (Workbench).
 | customer_id | int | YES | MUL | |
 | total_amount | int | YES | | |
 
-`orderdetails`
+`OrderDetails`
 
 | Field | Type | Null | Key | Extra |
 |---|---|---|---|---|
@@ -91,7 +91,7 @@ Tool: MySQL 8 (Workbench).
 | quantity | int | YES | | |
 | price_per_unit | int | YES | | |
 
-**Result:** All four tables confirmed with their expected columns and types, with primary and foreign keys in place across `customer_id`, `product_id`, `order_id`, and the `orderdetails` surrogate key.
+**Result:** All four tables confirmed with their expected columns and types, with primary and foreign keys in place across `customer_id`, `product_id`, `order_id`, and the `OrderDetails` surrogate key.
 
 Full query: [queries/01_describe_tables.sql](queries/01_describe_tables.sql)
 
@@ -137,7 +137,7 @@ Full query: [queries/03_customer_engagement_distribution.sql](queries/03_custome
 
 **Problem:** Analyze the relationship between average purchase quantity per order and total revenue across all products, to identify which products show premium purchasing trends.
 
-**Approach:** Grouped `orderdetails` by `product_id`, computing average quantity per order (rounded to 2 decimal places) and total revenue (`price_per_unit * quantity`), sorted by average quantity descending, with total revenue as a tiebreaker.
+**Approach:** Grouped `OrderDetails` by `product_id`, computing average quantity per order (rounded to 2 decimal places) and total revenue (`price_per_unit * quantity`), sorted by average quantity descending, with total revenue as a tiebreaker.
 
 **Average quantity vs. revenue by product:**
 
@@ -160,7 +160,7 @@ Full query: [queries/04_avg_quantity_per_order_vs_revenue.sql](queries/04_avg_qu
 
 **Problem:** For each product category, calculate the unique number of customers purchasing from it, to understand which categories have the widest appeal across the customer base.
 
-**Approach:** Joined `orderdetails` to `products` (for category) and `orders` (for customer_id), then counted distinct customers per category, sorted descending.
+**Approach:** Joined `OrderDetails` to `products` (for category) and `orders` (for customer_id), then counted distinct customers per category, sorted descending.
 
 **Unique customers by category:**
 
@@ -227,6 +227,26 @@ Full query: [queries/06_month_over_month_sales_growth.sql](queries/06_month_over
 **Result:** December 2023 saw the largest jump in average order value (+36,178.57), while February 2024 had the biggest drop (-85,583.33), swings of this size suggest order values are being pulled around by a handful of large orders per month rather than a steady trend. March 2023 shows NULL since it's the first month with no prior month to compare against.
 
 Full query: [queries/07_avg_order_value_trend.sql](queries/07_avg_order_value_trend.sql)
+
+### 8. Fast-turnover products: top 5 by sales frequency
+
+**Problem:** Based on sales data, identify products with the fastest turnover rates, suggesting high demand and the need for frequent restocking.
+
+**Approach:** Counted order-detail occurrences per product in `orderdetails`, grouped by `product_id`, sorted descending, limited to the top 5.
+
+**Top 5 products by sales frequency:**
+
+| product_id | SalesFrequency |
+|---|---|
+| 7 | 78 |
+| 3 | 68 |
+| 4 | 68 |
+| 2 | 67 |
+| 8 | 65 |
+
+**Result:** Product 7 leads with 78 order-line appearances, notably ahead of the next tier (products 3 and 4, tied at 68), indicating it's the standout candidate for frequent restocking priority.
+
+Full query: [queries/08_fast_turnover_products.sql](queries/08_fast_turnover_products.sql)
 
 ## How to run
 

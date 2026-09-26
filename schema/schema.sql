@@ -19,7 +19,7 @@ create table orders (
     customer_id int default null,
     total_amount int default null
 );
-create table orderdetails (
+create table OrderDetails (
     order_id int default null,
     product_id int default null,
     quantity int default null,
@@ -34,7 +34,7 @@ alter table orders
     add primary key (order_id),
     add constraint fk_orders_customer foreign key (customer_id) references customers(customer_id);
 
-alter table orderdetails
+alter table OrderDetails
     add id int auto_increment primary key first,
     add constraint fk_od_order foreign key (order_id) references orders(order_id),
     add constraint fk_od_product foreign key (product_id) references products(product_id);
