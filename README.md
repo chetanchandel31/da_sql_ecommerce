@@ -47,8 +47,91 @@ Tool: MySQL 8 (Workbench).
 
 ## Tasks
 
-### 1. idk yet
+### 1. Describe the tables
 
+**Problem:** Get the structure (columns, types, constraints) of all four tables.
+
+**Approach:** Ran `desc` on each of the four tables.
+
+**Table structures:**
+
+`customers`
+
+| Field | Type | Null | Key | Extra |
+|---|---|---|---|---|
+| customer_id | int | NO | PRI | |
+| name | text | YES | | |
+| location | text | YES | | |
+
+`products`
+
+| Field | Type | Null | Key | Extra |
+|---|---|---|---|---|
+| product_id | int | NO | PRI | |
+| name | text | YES | | |
+| category | text | YES | | |
+| price | int | YES | | |
+
+`orders`
+
+| Field | Type | Null | Key | Extra |
+|---|---|---|---|---|
+| order_id | int | NO | PRI | |
+| order_date | text | YES | | |
+| customer_id | int | YES | MUL | |
+| total_amount | int | YES | | |
+
+`orderdetails`
+
+| Field | Type | Null | Key | Extra |
+|---|---|---|---|---|
+| id | int | NO | PRI | auto_increment |
+| order_id | int | YES | MUL | |
+| product_id | int | YES | MUL | |
+| quantity | int | YES | | |
+| price_per_unit | int | YES | | |
+
+**Result:** All four tables confirmed with their expected columns and types, with primary and foreign keys in place across `customer_id`, `product_id`, `order_id`, and the `orderdetails` surrogate key.
+
+Full query: [queries/01_describe_tables.sql](queries/01_describe_tables.sql)
+
+### 2. Market segmentation analysis: top 3 cities by customer count
+
+**Problem:** Identify the top 3 cities with the highest number of customers, to determine key markets for targeted marketing and logistics optimization.
+
+**Approach:** Grouped `customers` by `location`, counted customers per city, sorted descending, and limited to the top 3.
+
+
+
+| location | number_of_customers |
+|---|---|
+| Delhi | 16 |
+| Chennai | 15 |
+| Jaipur | 11 |
+
+**Result:** Delhi leads with 16 customers, followed closely by Chennai (15) and Jaipur (11).
+
+Full query: [queries/02_top_cities_by_customers.sql](queries/02_top_cities_by_customers.sql)
+
+### 3. Customer engagement distribution
+
+**Problem:** Determine how many customers fall into each order-frequency category, based on the number of orders they've placed.
+
+**Approach:** Used a CTE to count orders placed per customer (joining `customers` and `orders` on `customer_id`), then grouped that result by order count to get the number of customers per frequency bucket, sorted ascending.
+
+| num_of_orders | CustomerCount |
+|---|---|
+| 1 | 26 |
+| 2 | 26 |
+| 3 | 18 |
+| 4 | 6 |
+| 5 | 6 |
+| 6 | 1 |
+| 8 | 1 |
+
+**Result:** Most customers (52) placed either 1 or 2 orders, with counts dropping off sharply beyond 3, only one customer each reached 6 and 8 orders, with no customers at 7.
+
+Full query: [queries/03_customer_engagement_distribution.sql](queries/03_customer_engagement_distribution.sql)
 
 ## How to run
 
