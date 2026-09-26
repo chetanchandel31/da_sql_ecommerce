@@ -201,6 +201,33 @@ Full query: [queries/05_unique_customers_by_category.sql](queries/05_unique_cust
 
 Full query: [queries/06_month_over_month_sales_growth.sql](queries/06_month_over_month_sales_growth.sql)
 
+### 7. Average order value trend
+
+**Problem:** Examine how the average order value changes month-on-month, to guide pricing and promotional strategies.
+
+**Approach:** Used a CTE to compute the average order value per month (rounded to 2 decimals), with `lag()` fetching the previous month's value in the same pass. The outer query computes the change (current minus previous) and sorts by that change descending.
+
+**Average order value and change by month:**
+
+| Month | AvgOrderValue | ChangeInValue |
+|---|---|---|
+| 2023-12 | 132095.24 | 36178.57 |
+| 2023-04 | 81142.86 | 20450.55 |
+| 2023-06 | 104000.00 | 16111.11 |
+| 2023-08 | 112500.00 | 13730.77 |
+| 2023-11 | 95916.67 | 12750.00 |
+| 2023-09 | 121958.33 | 9458.33 |
+| 2023-05 | 87888.89 | 6746.03 |
+| 2024-01 | 129583.33 | -2511.91 |
+| 2023-07 | 98769.23 | -5230.77 |
+| 2023-10 | 83166.67 | -38791.66 |
+| 2024-02 | 44000.00 | -85583.33 |
+| 2023-03 | 60692.31 | NULL |
+
+**Result:** December 2023 saw the largest jump in average order value (+36,178.57), while February 2024 had the biggest drop (-85,583.33), swings of this size suggest order values are being pulled around by a handful of large orders per month rather than a steady trend. March 2023 shows NULL since it's the first month with no prior month to compare against.
+
+Full query: [queries/07_avg_order_value_trend.sql](queries/07_avg_order_value_trend.sql)
+
 ## How to run
 
 Requires MySQL 8+ and MySQL Workbench.
