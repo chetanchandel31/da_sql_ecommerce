@@ -154,22 +154,22 @@ Full query: [queries/03_customer_engagement_distribution.sql](queries/03_custome
 
 **Problem:** Analyze the relationship between average purchase quantity per order and total revenue across all products, to identify which products show premium purchasing trends.
 
-**Approach:** Grouped `OrderDetails` by `product_id`, computing average quantity per order (rounded to 2 decimal places) and total revenue (`price_per_unit * quantity`), sorted by average quantity descending, with total revenue as a tiebreaker.
+**Approach:** Used left-join on `OrderDetails` and `Products` (for product name), then grouped by `product_id`, computing average quantity per order (rounded to 2 decimal places) and total revenue (`price_per_unit * quantity`), sorted by average quantity descending, with total revenue as a tiebreaker.
 
 **Average quantity vs. revenue by product:**
 
-| product_id | AvgQuantity | TotalRevenue |
-|---|---|---|
-| 6 | 2.27 | 938000 |
-| 1 | 2.00 | 1620000 |
-| 8 | 2.00 | 390000 |
-| 3 | 1.99 | 1080000 |
-| 5 | 1.98 | 595000 |
-| 7 | 1.94 | 6040000 |
-| 4 | 1.91 | 1560000 |
-| 2 | 1.88 | 7560000 |
+| product_id | name | AvgQuantity | TotalRevenue |
+|---|---|---|---|
+| 6 | Portable Bluetooth Speaker | 2.27 | 938000 |
+| 1 | Smartphone 6" | 2.00 | 1620000 |
+| 8 | Wireless Earbuds | 2.00 | 390000 |
+| 3 | Bluetooth Headphones | 1.99 | 1080000 |
+| 5 | Smartwatch Fitness Tracker | 1.98 | 595000 |
+| 7 | Digital SLR Camera | 1.94 | 6040000 |
+| 4 | E-Book Reader | 1.91 | 1560000 |
+| 2 | Laptop 15" Pro | 1.88 | 7560000 |
 
-**Result:** No clear correlation between average order quantity and revenue, product 2 has the lowest average quantity (1.88) but the highest total revenue by far (7,560,000), while product 6 has the highest average quantity (2.27) but only mid-range revenue. Products 1 and 8 both average exactly 2.00, and the revenue tiebreaker separates them (1,620,000 vs. 390,000). High-revenue products tend to sell in smaller quantities per order rather than bulk, suggesting price point drives revenue more than purchase volume.
+**Result:** No clear correlation between average order quantity and revenue, product 2 (Laptop 15" Pro) has the lowest average quantity (1.88) but the highest total revenue by far (7,560,000), while product 6 (Portable Bluetooth Speaker) has the highest average quantity (2.27) but only mid-range revenue. Products 1 (Smartphone 6") and 8 (Wireless Earbuds) both average exactly 2.00, and the revenue tiebreaker separates them (1,620,000 vs. 390,000). High-revenue products tend to sell in smaller quantities per order rather than bulk, suggesting price point drives revenue more than purchase volume.
 
 Full query: [queries/04_avg_quantity_per_order_vs_revenue.sql](queries/04_avg_quantity_per_order_vs_revenue.sql)
 
@@ -253,15 +253,15 @@ Full query: [queries/07_avg_order_value_trend.sql](queries/07_avg_order_value_tr
 
 **Top 5 products by sales frequency:**
 
-| product_id | SalesFrequency |
-|---|---|
-| 7 | 78 |
-| 3 | 68 |
-| 4 | 68 |
-| 2 | 67 |
-| 8 | 65 |
+| product_id | name | SalesFrequency |
+|---|---|---|
+| 7 | Digital SLR Camera | 78 |
+| 3 | Bluetooth Headphones | 68 |
+| 4 | E-Book Reader | 68 |
+| 2 | Laptop 15" Pro | 67 |
+| 8 | Wireless Earbuds | 65 |
 
-**Result:** Product 7 leads with 78 order-line appearances, notably ahead of the next tier (products 3 and 4, tied at 68), indicating it's the standout candidate for frequent restocking priority.
+**Result:** Product 7 (Digital SLR Camera) leads with 78 order-line appearances, notably ahead of the next tier ('Bluetooth Headphones' and 'E-Book Reader', tied at 68), indicating it's the standout candidate for frequent restocking priority.
 
 Full query: [queries/08_fast_turnover_products.sql](queries/08_fast_turnover_products.sql)
 
@@ -358,10 +358,8 @@ To start over, drop the database and repeat from step 1.
 
 ## Key Findings
 
-## Key Findings
-
 - **Electronics reaches the most customers.** 79 unique customers bought from it ([Task 5](#5-category-reach-unique-customers-per-product-category)), against 61 for Wearable Tech and 45 for Photography, though it also holds 5 of the 8 products ([Task 9](#9-inventory-interest-mismatch-low-adoption-products)).
-- **Price appears to drive revenue more than order quantity.** The Laptop 15" Pro (product 2) has the lowest average quantity per order (1.88) but the highest total revenue (7,560,000) ([Task 4](#4-premium-product-trends-average-quantity-per-order-vs-revenue), [Task 9](#9-inventory-interest-mismatch-low-adoption-products)).
+- **Price appears to drive revenue more than order quantity.** The Laptop 15" Pro (product 2) has the lowest average quantity per order (1.88) but the highest total revenue (7,560,000) ([Task 4](#4-premium-product-trends-average-quantity-per-order-vs-revenue)).
 - **Monthly sales are volatile with no clear trend.** Month-over-month change runs from -74.53% to +146.92% ([Task 6](#6-month-over-month-sales-growth-trend)), and September, December and July 2023 were the top three months by total sales ([Task 11](#11-peak-sales-months-top-3-by-total-sales)).
 - **New first-time buyers peaked in April 2023** [Task 10](#10-customer-acquisition-new-customers-by-month) shows 18 new customers in April 2023 and 4 or fewer per month from October 2023, though the customer list is fixed, so a falling count is partly expected as more customers have already placed a first order.
-- **Fast turnover and low adoption can overlap.** The Digital SLR Camera (product 7) appears in the most order lines, 78 ([Task 8](#8-fast-turnover-products-top-5-by-sales-frequency), [Task 9](#9-inventory-interest-mismatch-low-adoption-products)). Wireless Earbuds make the top 5 by order lines (65, [Task 8](#8-fast-turnover-products-top-5-by-sales-frequency)) yet fall below the 40% adoption threshold with 38 customers, as does Smartphone 6" with 36 ([Task 9](#9-inventory-interest-mismatch-low-adoption-products)).
+- **Fast turnover and low adoption can overlap.** The Digital SLR Camera (product 7) appears in the most order lines, 78 ([Task 8](#8-fast-turnover-products-top-5-by-sales-frequency)). Wireless Earbuds make the top 5 by order lines (65, [Task 8](#8-fast-turnover-products-top-5-by-sales-frequency)) yet fall below the 40% adoption threshold with 38 customers, as does Smartphone 6" with 36 ([Task 9](#9-inventory-interest-mismatch-low-adoption-products)).
