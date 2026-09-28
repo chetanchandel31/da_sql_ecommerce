@@ -348,12 +348,10 @@ Requires MySQL 8+ and MySQL Workbench.
     ```sql
     create database e_commerce_company;
     ```
-2. **Import the csv files** from [data/](data/). In Workbench, right-click `e_commerce_company` -> `Table Data Import Wizard`, pick a csv, and choose `Create new table`. Repeat for each of the four files. Keep the date columns (`order_date`) as text.
+2. **Import the csv files** from [data/](data/). In Workbench, right-click `e_commerce_company` -> `Table Data Import Wizard`, pick a csv, and choose `Create new table`. Repeat for each of the four files. Name the tables `Customers`, `Products`, `Orders` and `OrderDetails`.
+3. **Add primary and foreign keys.** The import wizard doesn't create them, so run the `alter table` statements from [schema/schema.sql](schema/schema.sql) once, in the order given.
+4. **Run any file in [queries/](queries/).** Each one is a standalone, read-only query, so they can be run in any order.
 
-TODO: do they depend on order AND INVOLVE CLEANING?
-
-3. **Run the files in [queries/](queries/) in order** (`01_...`, `02_...`, and so on). Later queries depend on the cleaning done by earlier ones, so don't skip or reorder them.
-
-[schema/schema.sql](schema/schema.sql) documents the raw tables as they look right after import. You don't need to run it.
+[schema/schema.sql](schema/schema.sql) holds the full table definitions plus the key setup. After importing through the wizard, only its `alter table` statements need running; the `create table` statements above them are there for reference.
 
 To start over, drop the database and repeat from step 1.
