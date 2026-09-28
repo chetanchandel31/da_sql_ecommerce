@@ -295,6 +295,33 @@ Full query: [queries/09_low_adoption_products.sql](queries/09_low_adoption_produ
 
 Full query: [queries/09_low_adoption_products.sql](queries/09_low_adoption_products.sql)
 
+### 10. Customer acquisition: new customers by month
+
+**Problem:** Evaluate the month-on-month growth in the customer base to understand the effectiveness of marketing campaigns and market expansion efforts.
+
+**Approach:** Used a CTE to find each customer's first purchase month (min `order_date` per customer, formatted as `YYYY-MM`), then grouped by `FirstPurchaseMonth` in the main query to count how many customers made their first purchase in each month, sorted ascending.
+
+**New customers by first purchase month:**
+
+| FirstPurchaseMonth | TotalNewCustomers |
+|---|---|
+| 2023-03 | 11 |
+| 2023-04 | 18 |
+| 2023-05 | 11 |
+| 2023-06 | 8 |
+| 2023-07 | 11 |
+| 2023-08 | 9 |
+| 2023-09 | 5 |
+| 2023-10 | 3 |
+| 2023-11 | 1 |
+| 2023-12 | 4 |
+| 2024-01 | 2 |
+| 2024-02 | 1 |
+
+**Result:** New-customer acquisition peaked early, with April 2023 bringing the most first-time buyers (18), and then it fell off, with 4 or less new customers in any month from October 2023 onward.
+
+Full query: [queries/10_new_customers_by_month.sql](queries/10_new_customers_by_month.sql)
+
 ## How to run
 
 Requires MySQL 8+ and MySQL Workbench.
