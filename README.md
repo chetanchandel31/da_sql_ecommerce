@@ -248,6 +248,53 @@ Full query: [queries/07_avg_order_value_trend.sql](queries/07_avg_order_value_tr
 
 Full query: [queries/08_fast_turnover_products.sql](queries/08_fast_turnover_products.sql)
 
+### 9. Inventory-interest mismatch: low-adoption products
+
+**Problem:** List products purchased by less than 40% of the customer base, indicating potential mismatches between inventory and customer interest.
+
+**Approach:** Joined `orderdetails` -> `products` -> `orders` -> `customers`, counted distinct customers per product, and filtered (via `having`) to products where that count is below 40% of the total customer count (computed with a subquery instead of hardcoding).
+
+**Products below the 40% customer-adoption threshold:**
+
+| product_id | name | UniqueCustomerCount |
+|---|---|---|
+| 1 | Smartphone 6" | 36 |
+| 8 | Wireless Earbuds | 38 |
+
+**Result:** 6 of the 8 total products meet or exceed the 40% customer-adoption threshold (out of 101 total customers), only Smartphone 6" (36) and Wireless Earbuds (38) fall short, making them the clearest candidates for inventory or marketing review.
+
+Full query: [queries/09_low_adoption_products.sql](queries/09_low_adoption_products.sql)
+
+### 9. Inventory-interest mismatch: low-adoption products
+
+**Problem:** List products purchased by less than 40% of the customer base, indicating potential mismatches between inventory and customer interest.
+
+**Approach:** Listed all products first for context. Then joined `orderdetails` -> `products` -> `orders` -> `customers`, counted distinct customers per product, and filtered (via `having`) to products where that count is below 40% of the total customer count (computed with a subquery instead of hardcoding).
+
+**All products:**
+
+| product_id | name | category | price |
+|---|---|---|---|
+| 1 | Smartphone 6" | Electronics | 15000 |
+| 2 | Laptop 15" Pro | Electronics | 60000 |
+| 3 | Bluetooth Headphones | Electronics | 8000 |
+| 4 | E-Book Reader | Electronics | 12000 |
+| 5 | Smartwatch Fitness Tracker | Wearable Tech | 5000 |
+| 6 | Portable Bluetooth Speaker | Electronics | 7000 |
+| 7 | Digital SLR Camera | Photography | 40000 |
+| 8 | Wireless Earbuds | Wearable Tech | 3000 |
+
+**Products below the 40% customer-adoption threshold:**
+
+| product_id | name | UniqueCustomerCount |
+|---|---|---|
+| 1 | Smartphone 6" | 36 |
+| 8 | Wireless Earbuds | 38 |
+
+**Result:** 6 of the 8 total products meet or exceed the 40% customer-adoption threshold, only Smartphone 6" (36) and Wireless Earbuds (38) fall short, making them the clearest candidates for inventory or marketing review.
+
+Full query: [queries/09_low_adoption_products.sql](queries/09_low_adoption_products.sql)
+
 ## How to run
 
 Requires MySQL 8+ and MySQL Workbench.
