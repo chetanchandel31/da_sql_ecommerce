@@ -322,6 +322,24 @@ Full query: [queries/09_low_adoption_products.sql](queries/09_low_adoption_produ
 
 Full query: [queries/10_new_customers_by_month.sql](queries/10_new_customers_by_month.sql)
 
+### 11. Peak sales months: top 3 by total sales
+
+**Problem:** Identify the months with the highest sales volume, to help plan stock levels, marketing efforts, and staffing ahead of peak demand periods.
+
+**Approach:** Grouped `orders` by month (`YYYY-MM`), summed `total_amount` for each, sorted descending, and limited to the top 3.
+
+**Top 3 months by total sales:**
+
+| Month | TotalSales |
+|---|---|
+| 2023-09 | 2927000 |
+| 2023-12 | 2774000 |
+| 2023-07 | 2568000 |
+
+**Result:** September 2023 was the strongest month (2,927,000), followed by December 2023 (2,774,000) and July 2023 (2,568,000). The three peaks are spread across the year rather than clustered in one stretch.
+
+Full query: [queries/11_peak_sales_months.sql](queries/11_peak_sales_months.sql)
+
 ## How to run
 
 Requires MySQL 8+ and MySQL Workbench.
