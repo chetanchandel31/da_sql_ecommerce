@@ -1,7 +1,24 @@
-# E-commerce company: SQL Case Study
-TODO:
+# E-commerce Company SQL Analysis
+
+SQL analysis of an e-commerce company's customers, products and orders, written in MySQL. It answers 11 business questions on customer behaviour, product performance, sales trends and inventory, using joins, CTEs and window functions.
+
+## Objectives
+
+- **Customer insights:** find the biggest city markets, how often customers order, and how fast new customers are being acquired
+- **Product performance:** compare average order quantity with revenue and see which categories reach the most customers
+- **Sales trends:** track month-over-month sales growth and average order value, and find peak months
+- **Inventory planning:** spot fast-turnover products and products with low customer adoption
 ## Dataset
-TODO:
+The dataset covers an e-commerce company's customers, products and orders, with orders placed between March 2023 and February 2024. The raw csv files are included in this repo under [data/](data/).
+
+| Table | Rows | Contents |
+|---|---|---|
+| `customers` | 100 | customer id, name and city |
+| `products` | 8 | product id, name, category and price |
+| `orders` | 200 | order id, order date, customer and total amount |
+| `orderdetails` | 519 | the products in each order: product, quantity and price per unit |
+
+Every table has a primary key, and `orders` and `orderdetails` link to their parent tables through foreign keys, as the diagram below shows. `orderdetails` has no natural primary key because an order can list the same product on more than one line, so it gets a surrogate `id`. The keys are added by [schema/schema.sql](schema/schema.sql) after import.
 ```mermaid
 erDiagram
     customers ||--o{ orders : customer_id
@@ -252,23 +269,6 @@ Full query: [queries/08_fast_turnover_products.sql](queries/08_fast_turnover_pro
 
 **Problem:** List products purchased by less than 40% of the customer base, indicating potential mismatches between inventory and customer interest.
 
-**Approach:** Joined `orderdetails` -> `products` -> `orders` -> `customers`, counted distinct customers per product, and filtered (via `having`) to products where that count is below 40% of the total customer count (computed with a subquery instead of hardcoding).
-
-**Products below the 40% customer-adoption threshold:**
-
-| product_id | name | UniqueCustomerCount |
-|---|---|---|
-| 1 | Smartphone 6" | 36 |
-| 8 | Wireless Earbuds | 38 |
-
-**Result:** 6 of the 8 total products meet or exceed the 40% customer-adoption threshold (out of 101 total customers), only Smartphone 6" (36) and Wireless Earbuds (38) fall short, making them the clearest candidates for inventory or marketing review.
-
-Full query: [queries/09_low_adoption_products.sql](queries/09_low_adoption_products.sql)
-
-### 9. Inventory-interest mismatch: low-adoption products
-
-**Problem:** List products purchased by less than 40% of the customer base, indicating potential mismatches between inventory and customer interest.
-
 **Approach:** Listed all products first for context. Then joined `orderdetails` -> `products` -> `orders` -> `customers`, counted distinct customers per product, and filtered (via `having`) to products where that count is below 40% of the total customer count (computed with a subquery instead of hardcoding).
 
 **All products:**
@@ -355,3 +355,13 @@ Requires MySQL 8+ and MySQL Workbench.
 [schema/schema.sql](schema/schema.sql) holds the full table definitions plus the key setup. After importing through the wizard, only its `alter table` statements need running; the `create table` statements above them are there for reference.
 
 To start over, drop the database and repeat from step 1.
+
+## Key Findings
+
+## Key Findings
+
+- **Electronics reaches the most customers.** 79 unique customers bought from it ([Task 5](#5-category-reach-unique-customers-per-product-category)), against 61 for Wearable Tech and 45 for Photography, though it also holds 5 of the 8 products ([Task 9](#9-inventory-interest-mismatch-low-adoption-products)).
+- **Price appears to drive revenue more than order quantity.** The Laptop 15" Pro (product 2) has the lowest average quantity per order (1.88) but the highest total revenue (7,560,000) ([Task 4](#4-premium-product-trends-average-quantity-per-order-vs-revenue), [Task 9](#9-inventory-interest-mismatch-low-adoption-products)).
+- **Monthly sales are volatile with no clear trend.** Month-over-month change runs from -74.53% to +146.92% ([Task 6](#6-month-over-month-sales-growth-trend)), and September, December and July 2023 were the top three months by total sales ([Task 11](#11-peak-sales-months-top-3-by-total-sales)).
+- **New first-time buyers peaked in April 2023** [Task 10](#10-customer-acquisition-new-customers-by-month) shows 18 new customers in April 2023 and 4 or fewer per month from October 2023, though the customer list is fixed, so a falling count is partly expected as more customers have already placed a first order.
+- **Fast turnover and low adoption can overlap.** The Digital SLR Camera (product 7) appears in the most order lines, 78 ([Task 8](#8-fast-turnover-products-top-5-by-sales-frequency), [Task 9](#9-inventory-interest-mismatch-low-adoption-products)). Wireless Earbuds make the top 5 by order lines (65, [Task 8](#8-fast-turnover-products-top-5-by-sales-frequency)) yet fall below the 40% adoption threshold with 38 customers, as does Smartphone 6" with 36 ([Task 9](#9-inventory-interest-mismatch-low-adoption-products)).
